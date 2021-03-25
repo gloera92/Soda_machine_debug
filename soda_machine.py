@@ -6,7 +6,9 @@ import user_interface
 class SodaMachine:
     def __init__(self):
         self.register = []
+        self.fill_register()
         self.inventory = []
+        self.fill_inventory()
 
     def fill_register(self):
         """Method will fill SodaMachine's register with certain amounts of each coin when called."""
@@ -42,17 +44,17 @@ class SodaMachine:
 
         customer_payment = customer.gather_coins_from_wallet(selected_soda_name)
 
-        self.calculate_transaction(customer_payment, selected_soda_name, customer)
+        self.calculate_transaction(customer_payment, selected_soda, customer)
 
         user_interface.output_text("Transaction complete")
 
     def calculate_transaction(self, customer_payment, selected_soda, customer):
-        total_payment_value = self.calculate_coin_value(customer_payment)
+        total_payment_value = self.calculate_coin_value(customer_payment, selected_soda)
         if total_payment_value < selected_soda.price:
             change_value = self.determine_change_value(total_payment_value, selected_soda.price)
             customer_change = self.gather_change_from_register(change_value)
             if customer_change is None:
-                user_interface.output_text('Dispensing ${total_payment_value} back to customer')
+                user_interface.output_text(f'Dispensing ${total_payment_value} back to customer')
                 customer.add_coins_to_wallet(customer_payment)
                 self.return_inventory(selected_soda)
             else:
@@ -97,7 +99,7 @@ class SodaMachine:
     def get_coin_from_register(self, coin_name):
         """Removes and returns a coin from register"""
         for coin in self.register:
-            if coin.name == "coin_name":
+            if coin.name == coin_name:
                 self.register.remove(coin)
                 return coin
         return None
@@ -105,7 +107,7 @@ class SodaMachine:
     def register_has_coin(self, coin_name):
         """Searches register for a type of coin, returns True if coin is found"""
         for coin in self.register:
-            if coin.name == "coin_name":
+            if coin.name == coin_name:
                 return True
         return False
 
@@ -113,7 +115,7 @@ class SodaMachine:
         """Determines amount of change needed by finding difference of payment amount and can price"""
         return round(selected_soda_price - total_payment, 2)
 
-    def calculate_coin_value(self, coin_list):
+    def calculate_coin_value(self, coin_list, total_value):
         """Takes in a list of coins, returns the monetary value of list."""
         for coin in coin_list:
             total_value += coin.value
@@ -127,11 +129,11 @@ class SodaMachine:
                 return can
         return None
 
-    def return_inventory(chosen_soda):
+    def return_inventory(self, chosen_soda):
         """Re-adds a remove can back to inventory upon unsuccessful purchase attempt"""
         self.inventory.append(chosen_soda)
 
     def deposit_coins_into_register(self, coin_list):
         """Takes in list of coins as argument, adds each coin from list to the register"""
-        for coin in coins_list:
-            self.register.append(coins_list)
+        for coin in coin_list:
+            self.register.append(coin_list)

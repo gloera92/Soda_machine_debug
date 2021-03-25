@@ -23,3 +23,4 @@ class Quarter(Coin):
     def __init__(self):
         super(Quarter, self).__init__("Quarter", 0.25)
 
+
